@@ -1,0 +1,65 @@
+PLACEMENT TOOLKIT CODEMAP
+
+WHAT THIS IS
+Editor-only custom MCP tools that give the agent measured spatial awareness and safe placement
+hands for world objects. Every mutating call returns numbers the agent did not invent (grounded
+clearance, penetration depth, separation vectors), so placement is verified by the engine, not by
+eyeballing a screenshot. Ships inside the existing CoplayDev unity-mcp bridge as [McpForUnityTool]
+handlers (no second MCP server). Personal tooling: not committed to any game VCS.
+
+FILES
+PlacementGeometry.cs   pure static math, no scene/editor dependency: AABB overlap, minimum
+                       translation vector (min-penetration axis), bounds bottom-center, containment,
+                       clearance-above. Overlaps and MinimumTranslationVector share one Eps so a true
+                       overlap always yields a non-zero MTV and applying it clears the overlap.
+SceneValidator.cs      read-only whole-scene / scoped defect report. groups renderers by placed-object
+                       root (prefab-instance root, else nearest collider-owner ancestor) so a multi-mesh
+                       prop is ONE item, not N. per item: grounded/floating/buried + clearance +
+                       suggested vertical fix. ground ray lifts RayLift=0.25 above the bounds bottom (was
+                       0.05) so a bottom sitting on/inside the ground collider is not missed by an
+                       inside-origin raycast. pairwise: when BOTH items have colliders the verdict is
+                       collider-only (Physics.ComputePenetration if either is convex, else no-penetration),
+                       never a renderer-AABB fallback; the AABB MTV fallback fires only when a side has no
+                       collider (this kills the canopy-overhang aabb false-positives between adjacent
+                       non-convex ground tiles). + containment. writes UISnapshots/scene.validation.json.
+PlacementOps.cs        the mutating primitives + shared runtime: SnapToGround (bounds-bottom to surface
+                       hit or configured groundY, ground ray lifts GroundRayLift=0.25 so an object whose
+                       collider dips to/below the surface still finds ground), Depenetrate (single deepest MTV per iteration, re-queries
+                       the broadphase each iteration when the against-list is null, reports unresolved at the
+                       cap), FaceToward, AlignToSurfaceNormal, RunPipeline (snap>depenetrate>re-measure),
+                       OverlappingColliders, FindByPath, TryWorldBounds.
+SceneValidateTool.cs   scene_validate    (read-only)   -> report of defects with numeric evidence
+PlaceObjectTool.cs     place_object      (mutating)    -> instantiate prefab or move existing, run the
+                       pipeline, return grounded/clearance/penetrations. one collapsed Undo group.
+                       PlacementParams (internal) holds the shared JObject parsing helpers.
+AdjustObjectTool.cs    adjust_object     (mutating)    -> one named op on an existing object:
+                       snap | depenetrate | face | align. one collapsed Undo group.
+RelationSolver.cs      place_relative    (mutating)    -> subject placed relative to anchor(s):
+                       on | beside | facing | between. IPlacementRelation seam + RelationRegistry.
+ScatterTool.cs         scatter_objects   (mutating)    -> N instances from a prefab list into a box or
+                       radius region, seeded rejection sampling (reject on penetration / slope / region
+                       exit). ScatterEngine is the testable core (takes a spawn function).
+
+ACT + MEASURE CONTRACT
+A mutating call places AND verifies in one shot: place_object runs ground-snap > depenetrate >
+measure and returns the post-op numbers. grounded=true + penetrationsRemaining=0 is engine-measured,
+not asserted by the agent. One tool call = one placed, verified object = one ctrl-z undo step.
+World-scene positional claims come from geometry (scene.validation.json / the returned numbers),
+never from a screenshot; screenshots stay for look-confirmation only.
+
+EXTENSION SEAM (relations) — seam not switch
+A new spatial relation is ONE new file, ZERO edits to the core:
+  1. add a new .cs in this folder with a public class implementing IPlacementRelation
+     (RelationSolver.cs). give it a parameterless constructor and a unique Name.
+  2. implement ComputeTarget(subject, anchors, args, out position, out groundSnap, out faceToward, out error).
+  3. that's it. RelationRegistry discovers all IPlacementRelation implementers by reflection at first use
+     (editor-only, so reflection is safe here — this never ships in an IL2CPP build), so place_relative
+     picks it up with no change to the tool, the registry, or any existing relation.
+The four built-ins (on / beside / facing / between) are the tracer examples; copy one to add e.g. "under"
+or "in-front-of".
+
+DISCOVERY NOTE
+tool registration is by [McpForUnityTool] reflection (CommandRegistry) — a new tool file auto-registers.
+custom-tool PARAMETER schemas reach the python MCP server via a nested `public class Parameters` with
+[ToolParameter] properties; the running server caches each tool's signature from first registration, so
+new/changed params take effect on the next fresh server connect (new session).

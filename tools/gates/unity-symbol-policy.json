@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "_comment": "TEIKOKU Unity verify-before-write symbol policy (AOR U-10 / AOR-D9). FROZEN in .claude/gate-manifest.txt (R8). A 'deny' symbol used in a changeset .cs with no // UNITY-VERIFY[<symbol>] receipt (or a session receipt-ledger row) is a BLOCK; a 'verify' symbol without a receipt is a WARN. The set is conservative and version-sensitivity grounded: Unity API symbols whose presence/signature drifts across LTS lines, where using them blind risks a target-version compile break. Extend out-of-band + re-lock (a run cannot weaken its own gate).",
+  "symbols": [
+    {"symbol": "FindObjectsByType", "tier": "deny",
+     "reason": "added in Unity 2022.2; absent on older LTS (2021/2020) -- verify the target Unity version via unity_reflect before use"},
+    {"symbol": "FindFirstObjectByType", "tier": "deny",
+     "reason": "added in Unity 2022.2 alongside FindObjectsByType; verify the target version"},
+    {"symbol": "Object.FindObjectsByType", "tier": "deny",
+     "reason": "2022.2+ replacement for FindObjectsOfType; verify the target version supports it"},
+    {"symbol": "Awaitable", "tier": "deny",
+     "reason": "UnityEngine.Awaitable is Unity 2023.1+ only; verify the target version before awaiting it"},
+    {"symbol": "InputSystem", "tier": "verify",
+     "reason": "the new Input System (com.unity.inputsystem) may not be installed in this project -- verify the package + the Active Input Handling setting via unity_docs"},
+    {"symbol": "PlayerInput", "tier": "verify",
+     "reason": "PlayerInput requires the Input System package; verify it is installed before wiring it"},
+    {"symbol": "Addressables", "tier": "verify",
+     "reason": "com.unity.addressables may not be installed; verify the package before replacing Resources.Load with it"},
+    {"symbol": "Burst", "tier": "verify",
+     "reason": "the Burst compiler package may be absent; verify before annotating [BurstCompile]"}
+  ]
+}

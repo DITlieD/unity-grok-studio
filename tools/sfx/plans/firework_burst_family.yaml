@@ -1,0 +1,54 @@
+version: 0
+name: firework_burst
+profile: impact
+seed: 42
+event_map:
+  - t_ms: 20
+    label: burst
+layers:
+  - role: transient
+    source: seed/FIRE_Transient_Boom_01.wav
+    offset_ms: 0
+    gain_db: 0.0
+    fade_in_ms: 0
+    fade_out_ms: 30
+    pitch_cents: 0
+  - role: debris
+    source: seed/FIRE_Debris_Sparks_01.wav
+    offset_ms: 15
+    gain_db: -2.0
+    fade_in_ms: 5
+    fade_out_ms: 80
+    pitch_cents: 0
+  - role: sub
+    source:
+      kind: dsp
+      dsp: sub_boom
+      params:
+        duration_s: 0.95
+        f0: 42
+        seed: 42
+    offset_ms: 0
+    gain_db: -1.5
+    fade_in_ms: 0
+    fade_out_ms: 50
+    pitch_cents: 0
+  - role: tail
+    source: seed/FIRE_CrackleTail_01.wav
+    offset_ms: 40
+    gain_db: -4.0
+    fade_in_ms: 10
+    fade_out_ms: 100
+    pitch_cents: 10
+family:
+  variant_count: 8
+  lock_transient_pitch: true
+  jitter:
+    gain_db: 0.6
+    pitch_cents: 18
+    offset_ms: 4
+target:
+  peak_dbfs: -1.0
+  sample_rate: 48000
+  channels: 1
+  duration_s: 1.2

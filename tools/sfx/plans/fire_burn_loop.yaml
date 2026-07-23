@@ -1,0 +1,82 @@
+version: 0
+name: fire_burn_loop
+profile: loop
+seed: 4242
+# v3: real library sources only (owner rejected procedural v1 "plastic bag" / v2 "small
+# things hitting each other"). bed = real torch flame + real woodstove crackle; stylized
+# magic flicker + cartoon pops for game-fire character.
+# mechanics notes (engine as built, no tool edits):
+# - buffer duration pinned to the torch source length (206184/48000) so its fade_out
+#   lands inside the buffer; fades apply at SOURCE ends, not buffer ends
+# - bed flame carries role "transient" solely because lock_transient_pitch is the only
+#   pitch-lock mechanism; pops/embers/sweetener keep pitch jitter
+event_map:
+  - t_ms: 0
+    label: bed
+  - t_ms: 620
+    label: pop_a
+  - t_ms: 1450
+    label: magic_flicker
+  - t_ms: 2080
+    label: wood_snap
+  - t_ms: 3120
+    label: pop_b
+  - t_ms: 3680
+    label: ember
+layers:
+  - role: transient
+    source: freesound/FS_249809_Waving_Torch_wav.wav
+    event_index: 0
+    gain_db: 0.0
+    fade_in_ms: 50
+    fade_out_ms: 120
+    pitch_cents: 0
+  - role: texture
+    source: sonniss/2024/UberDuo - The Wood Stove Audio Prop Set/FIREMisc_Fire Crackling In A Woodstove_UberDuo_WOOD.wav
+    event_index: 0
+    gain_db: 11.0
+    fade_in_ms: 40
+    pitch_cents: 0
+  - role: debris
+    source: freesound/FS_244654_Pop_2.flac
+    event_index: 1
+    gain_db: -8.0
+    fade_out_ms: 20
+    pitch_cents: -60
+  - role: sweetener
+    source: freesound/FS_442872_Fire_Magic.wav
+    event_index: 2
+    gain_db: -9.0
+    fade_in_ms: 10
+    fade_out_ms: 80
+    pitch_cents: -40
+  - role: debris
+    source: sonniss/2024/InMotionAudio - Wood/WOODBrk_Snap09_InMotionAudio_Wood.wav
+    event_index: 3
+    gain_db: -10.0
+    fade_out_ms: 60
+    pitch_cents: 0
+  - role: debris
+    source: freesound/FS_244656_Pop_6.flac
+    event_index: 4
+    gain_db: -9.0
+    fade_out_ms: 20
+    pitch_cents: -80
+  - role: debris
+    source: freesound/FS_244654_Pop_2.flac
+    event_index: 5
+    gain_db: -13.0
+    fade_out_ms: 20
+    pitch_cents: -110
+family:
+  variant_count: 8
+  lock_transient_pitch: true
+  jitter:
+    gain_db: 0.9
+    pitch_cents: 35
+    offset_ms: 8
+target:
+  peak_dbfs: -3.0
+  sample_rate: 48000
+  channels: 1
+  duration_s: 4.2955

@@ -1,0 +1,10 @@
+{
+  "name": "com.unitygrok.agentdebug",
+  "version": "0.1.0",
+  "displayName": "UnityGrok Agent Debug",
+  "description": "Runtime play-mode sight for LLM-assisted debugging. RuntimeStateExporter dumps transform/Animator/Rigidbody/watch state to JSON via JsonUtility, and AgentLogBridge mirrors the threaded log stream (with full exception stacks) to disk, so an agent can read what actually happened at runtime instead of guessing from edit-mode static scene tools.",
+  "unity": "6000.0",
+  "author": {
+    "name": "Unity Grok Studio"
+  }
+}

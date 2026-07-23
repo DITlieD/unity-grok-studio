@@ -1,0 +1,14 @@
+Unity Grok Studio — third-party notices
+
+This repository aggregates original package code (MIT) with vendored components:
+
+1. img2threejs (tools/img2threejs/) — Apache License 2.0
+   See tools/img2threejs/LICENSE
+
+2. mcpforunityserver (not vendored; fetched via uvx at runtime) — see CoplayDev terms
+
+3. Optional SFX samples — NOT shipped. Users may add Freesound or licensed audio
+   under sfx_library/ subject to their own licenses.
+
+4. Former personal package ids (com.taporbit.*) were renamed to com.unitygrok.*
+   for this public package; no product affiliation implied.

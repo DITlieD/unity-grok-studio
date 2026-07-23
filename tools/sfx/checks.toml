@@ -1,0 +1,69 @@
+# Per-category QA threshold profiles for analyze_audio.py
+# exit 1 when any hard check fails; soft checks are reported but non-gating unless noted
+
+[profiles.default]
+min_duration_s = 0.01
+max_duration_s = 30.0
+min_sample_rate = 22050
+max_peak_dbfs = 0.0
+min_peak_dbfs = -60.0
+max_clip_samples = 0
+max_dc_offset = 0.05
+max_leading_silence_ms = 500.0
+max_trailing_silence_ms = 2000.0
+max_loop_seam_delta = 0.5
+min_stereo_correlation = -1.0
+
+[profiles.ui]
+min_duration_s = 0.02
+max_duration_s = 2.0
+min_sample_rate = 22050
+max_peak_dbfs = -0.5
+min_peak_dbfs = -40.0
+max_clip_samples = 0
+max_dc_offset = 0.02
+max_leading_silence_ms = 50.0
+max_trailing_silence_ms = 300.0
+max_loop_seam_delta = 1.0
+min_stereo_correlation = -1.0
+
+[profiles.impact]
+min_duration_s = 0.05
+max_duration_s = 3.0
+min_sample_rate = 22050
+max_peak_dbfs = 0.0
+min_peak_dbfs = -24.0
+max_clip_samples = 0
+max_dc_offset = 0.03
+max_leading_silence_ms = 80.0
+max_trailing_silence_ms = 1500.0
+max_loop_seam_delta = 1.0
+min_stereo_correlation = -1.0
+# soft: expect at least one onset for impact family
+min_onsets = 0
+
+[profiles.loop]
+min_duration_s = 0.5
+max_duration_s = 60.0
+min_sample_rate = 22050
+max_peak_dbfs = -0.5
+min_peak_dbfs = -40.0
+max_clip_samples = 0
+max_dc_offset = 0.02
+max_leading_silence_ms = 20.0
+max_trailing_silence_ms = 20.0
+max_loop_seam_delta = 0.15
+min_stereo_correlation = 0.0
+
+[profiles.ambience]
+min_duration_s = 1.0
+max_duration_s = 120.0
+min_sample_rate = 22050
+max_peak_dbfs = -3.0
+min_peak_dbfs = -50.0
+max_clip_samples = 0
+max_dc_offset = 0.05
+max_leading_silence_ms = 100.0
+max_trailing_silence_ms = 100.0
+max_loop_seam_delta = 0.3
+min_stereo_correlation = -1.0

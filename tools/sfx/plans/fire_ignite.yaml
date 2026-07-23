@@ -1,0 +1,41 @@
+version: 0
+name: fire_ignite
+profile: impact
+seed: 777
+# ignite/flare one-shot for molotov/burn beats: real fireball whoosh core + magic warmth
+# sweetener + cartoon pop accent. duration left unset (auto = longest layer + pad).
+event_map:
+  - t_ms: 0
+    label: flare
+layers:
+  - role: transient
+    source: freesound/FS_683179_Fireball.wav
+    event_index: 0
+    gain_db: 0.0
+    fade_out_ms: 40
+    pitch_cents: 0
+  - role: sweetener
+    source: freesound/FS_442872_Fire_Magic.wav
+    event_index: 0
+    offset_ms: 20
+    gain_db: -5.0
+    fade_out_ms: 60
+    pitch_cents: -20
+  - role: debris
+    source: freesound/FS_244654_Pop_2.flac
+    event_index: 0
+    offset_ms: 10
+    gain_db: -6.0
+    fade_out_ms: 15
+    pitch_cents: -40
+family:
+  variant_count: 8
+  lock_transient_pitch: true
+  jitter:
+    gain_db: 1.0
+    pitch_cents: 45
+    offset_ms: 6
+target:
+  peak_dbfs: -1.0
+  sample_rate: 48000
+  channels: 1

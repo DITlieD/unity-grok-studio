@@ -1,0 +1,11 @@
+{
+  "name": "UnityGrok.UITools.Editor",
+  "rootNamespace": "UnityGrok.UITools",
+  "references": [
+    "UnityEngine.UI"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "autoReferenced": true
+}

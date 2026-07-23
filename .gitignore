@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.free-chat-shim.*
+.env
+Generated/
+outputs/
+node_modules/
+*.log
+.DS_Store

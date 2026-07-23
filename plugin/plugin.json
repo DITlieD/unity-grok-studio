@@ -1,0 +1,8 @@
+{
+  "name": "unity-grok-studio",
+  "version": "0.1.0",
+  "description": "Standalone Unity + asset tooling for Grok Build: blender-gen, SFX, ARDY, img2threejs, static gates, vision pre-describe, optional LIA.",
+  "author": {
+    "name": "Unity Grok Studio"
+  }
+}

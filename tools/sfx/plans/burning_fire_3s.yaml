@@ -1,0 +1,43 @@
+version: 0
+name: burning_fire
+profile: ambience
+seed: 88
+# v2: event-driven wood cracks, no hiss-stack layers (v1 plastic-bag failure)
+event_map:
+  - t_ms: 0
+    label: bed
+layers:
+  - role: body
+    source: seed/FIRE_BurningBed_Close_01.wav
+    event_index: 0
+    offset_ms: 0
+    gain_db: 0.0
+    fade_in_ms: 15
+    fade_out_ms: 30
+    pitch_cents: 0
+  - role: texture
+    source:
+      kind: dsp
+      dsp: fire_bed
+      params:
+        duration_s: 3.0
+        intensity: 0.55
+        seed: 991
+    event_index: 0
+    offset_ms: 0
+    gain_db: -2.5
+    fade_in_ms: 20
+    fade_out_ms: 30
+    pitch_cents: 8
+family:
+  variant_count: 3
+  lock_transient_pitch: true
+  jitter:
+    gain_db: 0.35
+    pitch_cents: 10
+    offset_ms: 5
+target:
+  peak_dbfs: -3.5
+  sample_rate: 48000
+  channels: 1
+  duration_s: 3.0

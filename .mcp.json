@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "unity": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "mcpforunityserver==10.1.0",
+        "mcp-for-unity"
+      ]
+    },
+    "blender-gen": {
+      "command": "${UNITY_GROK_ROOT}/mcp/wrappers/blender-gen.sh"
+    },
+    "vision-check": {
+      "command": "${UNITY_GROK_ROOT}/mcp/wrappers/vision-check.sh"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "com.unitygrok.uitools",
+  "version": "0.1.0",
+  "displayName": "UnityGrok UI Tools",
+  "description": "Editor tooling for LLM-assisted UI iteration. Dumps the resolved layout of UI Toolkit documents and uGUI canvases to JSON so an agent can reason over real geometry instead of guessing anchors and flex.",
+  "unity": "6000.0",
+  "author": {
+    "name": "Unity Grok Studio"
+  }
+}

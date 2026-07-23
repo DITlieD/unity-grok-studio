@@ -1,0 +1,78 @@
+# Unity cheap harness — free model stanzas for ~/.grok/config.toml
+# Apply with: scripts/apply_models.sh  (or copy the blocks you need)
+# Neither path requires paid xAI/Claude as the default.
+
+# ---------------------------------------------------------------------------
+# FreeLLMAPI (or freellm-compatible shim) — OpenAI Chat Completions
+# Default target: http://127.0.0.1:3001/v1
+# Prefer real FreeLLMAPI with a coding profile of tool-capable models ≥32k.
+# When provider keys are not yet set, bootstrap can start bin/free_chat_shim.py
+# on :3001 (Devin free models behind an OpenAI-compatible surface).
+# ---------------------------------------------------------------------------
+[model.free-auto]
+model = "auto"
+base_url = "http://127.0.0.1:3001/v1"
+name = "FreeLLMAPI Auto"
+description = "Free coding models via FreeLLMAPI (or freellm-compatible free shim)"
+env_key = "FREELLM_API_KEY"
+api_backend = "chat_completions"
+# CRITICAL: default for unknown custom models is 200k — set to the SMALLEST
+# context window among models in the active FreeLLMAPI coding profile.
+context_window = 32768
+max_completion_tokens = 8192
+stream_tool_calls = true
+
+# Optional pinned free coder (set model id from FreeLLMAPI /v1/models)
+[model.free-coder]
+model = "qwen3-coder"
+base_url = "http://127.0.0.1:3001/v1"
+name = "Free Coder (pinned)"
+description = "Pinned free coding model via FreeLLMAPI"
+env_key = "FREELLM_API_KEY"
+api_backend = "chat_completions"
+context_window = 32768
+max_completion_tokens = 8192
+stream_tool_calls = true
+
+# ---------------------------------------------------------------------------
+# Devin free models — Anthropic Messages via local bridge :8810
+# Requires Devin Desktop credentials + devin-bridge (see bootstrap.sh).
+# Keep DEVIN_TOOL_DESC=generic on the bridge to avoid gateway content filters.
+# ---------------------------------------------------------------------------
+[model.devin-free]
+model = "kimi-k2-7"
+base_url = "http://127.0.0.1:8810/v1"
+name = "Devin Free (kimi-k2-7)"
+description = "Free Devin model via local bridge (messages API)"
+api_backend = "messages"
+api_key = "devin-local"
+context_window = 32768
+max_completion_tokens = 8192
+extra_headers = { "anthropic-version" = "2023-06-01" }
+
+[model.devin-glm]
+model = "glm-5-2"
+base_url = "http://127.0.0.1:8810/v1"
+name = "Devin Free (glm-5-2)"
+description = "Free Devin glm-5-2 via local bridge"
+api_backend = "messages"
+api_key = "devin-local"
+context_window = 32768
+max_completion_tokens = 8192
+extra_headers = { "anthropic-version" = "2023-06-01" }
+
+[model.devin-swe]
+model = "swe-1-6"
+base_url = "http://127.0.0.1:8810/v1"
+name = "Devin Free (swe-1-6)"
+description = "Free Devin swe-1-6 via local bridge"
+api_backend = "messages"
+api_key = "devin-local"
+context_window = 32768
+max_completion_tokens = 8192
+extra_headers = { "anthropic-version" = "2023-06-01" }
+
+# Default for Unity cheap harness coworkers (override after paid auth if desired).
+# Do NOT force this if the teammate still wants paid frontier defaults.
+# [models]
+# default = "free-auto"

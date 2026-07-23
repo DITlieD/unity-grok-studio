@@ -1,0 +1,25 @@
+# Generation providers. license_class is fail-closed:
+# commercial_ok | noncommercial | unknown
+# noncommercial/unknown refused unless --research-quarantine
+
+[providers.stable_audio_3_small_sfx]
+enabled = true
+license_class = "commercial_ok"
+model_id = "stabilityai/stable-audio-open-small"
+notes = "Stable Audio 3 Small SFX under Stability Community License (commercial below revenue threshold). Re-verify at U4 recon."
+status = "parked_pending_host"
+# Real inference not wired; DSP only via --allow-dsp-placeholder (never labeled stable_audio)
+inference_implemented = false
+# parked: host recon may leave this commercial_ok but implementation returns A3/A4 park until weights+host viable
+
+[providers.research_sony_woosh]
+enabled = false
+license_class = "noncommercial"
+model_id = "sony/woosh"
+notes = "EXCLUDED from shipping path (noncommercial). Refusal test fixture."
+
+[providers.unknown_provider]
+enabled = false
+license_class = "unknown"
+model_id = "unknown/mystery"
+notes = "Refusal test fixture."

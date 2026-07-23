@@ -1,0 +1,76 @@
+ANIM TOOLKIT CODEMAP
+
+WHAT THIS IS
+The animation arm of the UI Tools package: editor-side grounding + mutation tools that let an LLM
+agent SEE an Animator graph, SEE motion over time, PROVE an anim played, and fit a clip to a
+code-owned timing window. Same contract as the placement toolkit: read tools emit engine-measured
+JSON, mutate tools verify in the same call, temporal/pose claims come from numbers, never a
+screenshot alone. Ships inside the CoplayDev unity-mcp bridge as [McpForUnityTool] handlers (no
+second MCP server). The runtime recorder (leg 2) lives in com.unitygrok.agentdebug (runtime asmdef),
+not here. Personal tooling, gitignored per game.
+
+THE GAP THIS CLOSES
+Mutation already existed (unityMCP manage_animation + C# builders). Evidence did not. An agent
+editing an Animator was blind to the graph (locked in GUID-dense .controller YAML), blind to motion
+(a screenshot is one frame), and could not prove a clip played. These four legs are the evidence
+layer.
+
+FILES (editor asmdef UnityGrok.UITools.Anim, references MCPForUnity.Editor + Newtonsoft)
+AnimGraphSnapshot.cs   LEG 1 core. Static dump of an AnimatorController (asset path or scene
+                       Animator) to UISnapshots/anim.<name>.graph.json: parameters (+defaults),
+                       per layer (mask summary, blendingMode, ikPass, defaultState, anyState
+                       transitions), per state (motion clip length / blend tree, speed + speed
+                       param, transitions with conditions/exitTime/duration/interruption), per clip
+                       the AnimationEvents (function, time, normalizedTime, args). Recurses sub
+                       state machines. MenuItem "Tools/UI Tools/Snapshot Animator Graph".
+AnimSnapshotTool.cs    anim_snapshot   (read-only)  -> writes the graph json, returns it parsed
+                       inline (controller path OR scene object with an Animator).
+AnimClipFilmstrip.cs   LEG 3 core. AnimationMode-samples a clip on a scene model at K normalized
+                       times, renders a camera per sample into a contact-sheet PNG, records per
+                       sample bone world positions (humanoid key bones if the avatar is human, else
+                       the clip's animated transform paths) to anim.<clip>.filmstrip.json. Reports
+                       poseSpreadMeters: max bone travel across samples, ~0 means the clip did NOT
+                       retarget to the model (a real, measured failure signal, not eyeballing).
+AnimFilmstripTool.cs   anim_filmstrip  (read-only)  -> resolves clip (.anim or fbx sub-asset), model
+                       (scene path OR a prefab to instantiate+sample+destroy) and camera, runs the
+                       capture, returns contactSheet + poseJson + poseSpreadMeters.
+AnimFitStateSpeedTool.cs anim_fit_state_speed (mutating) -> sets a state.speed = clipLength /
+                       targetDuration so the anim fits a code-owned window (code owns timing, anim
+                       stretches). Optional speed_param binds a float parameter as the speed
+                       multiplier so runtime (e.g. quick_reload) can scale further. Returns the
+                       measured appliedSpeed + effectiveDuration. One Undo step, SaveAssets.
+AnimClipEventsTool.cs  anim_clip_events (get | set) -> reads or replaces a clip's AnimationEvents.
+                       Standalone .anim goes through AnimationUtility.SetAnimationEvents; an
+                       fbx-imported clip is routed through the ModelImporter.clipAnimations[].events
+                       + SaveAndReimport (the imported clip itself is read-only). set re-reads and
+                       returns the persisted events as proof.
+
+RUNTIME SIBLING (com.unitygrok.agentdebug/Runtime/AnimRuntimeRecorder.cs)
+LEG 2. A MonoBehaviour that, while armed, appends per-layer state enter/exit + transitions +
+watched-parameter changes to persistentDataPath/AgentDebug/anim-trace.ndjson, timestamped by
+frame + Time.time. State hashes resolve to "Layer.State" names via a lookup baked from the
+AnimatorController at Arm() under #if UNITY_EDITOR (perfect names in editor play mode where the
+playtester runs; degrades to #<hash> in a player build). This is the off-agent artifact the auditor
+reads to turn "reload plays cleanly each cycle" into evidence: armed on the player Animator during a
+playtester fire-until-empty run, the ndjson shows Reload_b flipping, the reload state entering within
+a frame and exiting on time, N clean cycles, no stutter re-entry.
+
+ACT + MEASURE CONTRACT
+anim_fit_state_speed places AND measures: the returned appliedSpeed/effectiveDuration are read back
+off the mutated state, not asserted. anim_clip_events set re-reads the clip and returns the persisted
+events. A temporal claim ("reload fits 0.5s", "event at 0.3 normalized") comes from these numbers or
+the recorder ndjson, never a screenshot; the filmstrip PNG is for the look pass (raian judges), its
+poseSpreadMeters is the measured proof the clip actually posed the model.
+
+EXTENSION NOTE
+Tool registration is [McpForUnityTool] reflection (auto-registers a new tool file). Custom-tool
+PARAMETER schemas reach the python MCP server from the nested Parameters class on the next fresh
+server connect (new session), so a param added this session is callable via execute_code now and as a
+first-class tool next session (same caveat as the placement toolkit).
+
+FIRST CONSUMER: ZC reload anims
+Leg 1 on PlayerAnimController settled it: 5 layers (Movement, Head/Mask_Head, Death, Weapons/
+Mask_Upper, Body/Mask_Body), and the ONLY reload state is "Shotgun Reload" (ShotgunReload, 0.933s) on
+the Weapons upper-body layer. No pistol/rifle reload state exists, so the reload fix is CONTENT (add
+states + source clips), then anim_fit_state_speed to the per-gun magReloadDuration, then the recorder
++ filmstrip to verify. See workflow/reasoning/anim-agent-tooling.md.

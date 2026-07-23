@@ -1,0 +1,4 @@
+mcp>=1.0
+httpx
+pillow
+numpy

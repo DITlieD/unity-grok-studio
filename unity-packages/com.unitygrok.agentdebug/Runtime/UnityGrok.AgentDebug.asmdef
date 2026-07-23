@@ -1,0 +1,8 @@
+{
+  "name": "UnityGrok.AgentDebug",
+  "rootNamespace": "UnityGrok.AgentDebug",
+  "references": [],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "autoReferenced": true
+}
