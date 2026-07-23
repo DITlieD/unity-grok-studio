@@ -29,12 +29,19 @@ fi
 pip -q install pytest || true
 mkdir -p "$ROOT/sfx_library"/{searchable,generated,reports}
 chmod +x "$ROOT"/scripts/*.sh "$ROOT"/mcp/wrappers/*.sh "$ROOT"/plugin/hooks/bin/*.sh 2>/dev/null || true
+chmod +x "$ROOT"/tools/devin-bridge/run.sh 2>/dev/null || true
 if [[ -x "$ROOT/scripts/apply_models.sh" ]]; then
   bash "$ROOT/scripts/apply_models.sh" || log "WARN: apply_models skipped"
 fi
 if command -v grok >/dev/null 2>&1; then
   log "install plugin: grok plugin install \"$ROOT/plugin\" --trust"
   log "  grok plugin enable unity-grok-studio"
+fi
+# Optional: portable Devin bridge (do not start without credentials)
+if [[ -f "$ROOT/tools/devin-bridge/requirements.txt" ]]; then
+  log "Devin bridge available at tools/devin-bridge/"
+  log "  deps: ./scripts/install-deps.sh --with-devin-bridge"
+  log "  run:  log into Devin Desktop, then ./tools/devin-bridge/run.sh"
 fi
 log "UNITY_GROK_ROOT=$UNITY_GROK_ROOT"
 log "bootstrap complete. Run: ./scripts/doctor.sh"

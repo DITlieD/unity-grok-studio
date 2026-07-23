@@ -15,6 +15,33 @@ Agent-agnostic: works under Claude Code, Codex, or OpenCode. Wherever this doc s
 vision" or "agent browser tool", use whatever the host provides — native image reading, a
 browser MCP (playwright/chrome-devtools), the project preview, or a user-supplied screenshot.
 
+
+
+## Script locations (unity-grok-studio)
+
+Forge scripts live at:
+
+```text
+$UNITY_GROK_ROOT/tools/img2threejs/forge/...
+```
+
+Not relative to the skill root only. Always set `UNITY_GROK_ROOT` to the package checkout.
+
+Examples:
+
+```bash
+export UNITY_GROK_ROOT=/path/to/unity-grok-studio
+python "$UNITY_GROK_ROOT/tools/img2threejs/forge/stage1_intake/probe_image.py" fixtures/ref.png
+python "$UNITY_GROK_ROOT/tools/img2threejs/forge/stage1_intake/build_detail_inventory.py" <image> --mode grid-3x3 --out-dir <dir> --out di.json
+python "$UNITY_GROK_ROOT/tools/img2threejs/forge/stage2_spec/new_pre_spec_assessment.py" "Name" --image <img> --complexity moderate --out assessment.json
+python "$UNITY_GROK_ROOT/tools/img2threejs/forge/stage4_review/make_comparison_sheet.py" --reference <img> --render <shot> --out cmp.png --json
+```
+
+Supporting docs/grimoire: `$UNITY_GROK_ROOT/tools/img2threejs/grimoire/`.
+Vendored tree is complete under `tools/img2threejs/` (forge stages 1–4 + tests).
+
+Full vision self-correction needs FreeLLMAPI vision (Path A) or host vision; text-only models can use Path B predescribe (`docs/VISION-ROUTING.md`).
+
 ## When To Use
 
 The user attaches/points to an object image and wants a procedural Three.js model, a
@@ -41,7 +68,7 @@ hidden sides or guarantee exact geometry — say so instead of faking confidence
 
 ## The Loop (scripts do enforcement; agent vision does judgment)
 
-Run scripts from the skill root (`forge/...`). Pure Python 3.10+ stdlib, no pip installs.
+Run scripts from `$UNITY_GROK_ROOT/tools/img2threejs/` (`forge/...`). Pure Python 3.10+ stdlib, no pip installs for core probe/intake.
 Full flags: `grimoire/scripts.md`. Never let a script *score* visuals — that is the agent's job.
 
 1. Probe local images: `forge/stage1_intake/probe_image.py <image>` (metadata only, not a visual check).
@@ -167,4 +194,7 @@ material recipes + hard-won failure patterns: `grimoire/build/geometry_patterns.
 
 
 ## Standalone
-Forge scripts: `$UNITY_GROK_ROOT/tools/img2threejs/`. Require vision (FreeLLMAPI or vision-check).
+
+Forge scripts: `$UNITY_GROK_ROOT/tools/img2threejs/forge/...`.
+Require vision for review loop (FreeLLMAPI Path A, host vision, or Path B predescribe + comparison sheets).
+See `docs/VISION-ROUTING.md`.

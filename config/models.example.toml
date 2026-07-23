@@ -36,7 +36,8 @@ stream_tool_calls = true
 
 # ---------------------------------------------------------------------------
 # Devin free models — Anthropic Messages via local bridge :8810
-# Requires Devin Desktop credentials + devin-bridge (see bootstrap.sh).
+# Bridge: ./tools/devin-bridge/run.sh  (Devin Desktop login required)
+# Requires Devin Desktop credentials + portable bridge under tools/devin-bridge/.
 # Keep DEVIN_TOOL_DESC=generic on the bridge to avoid gateway content filters.
 # ---------------------------------------------------------------------------
 [model.devin-free]
