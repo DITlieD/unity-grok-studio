@@ -17,4 +17,10 @@ Never hardcode absolute owner machine paths. Prefer env + relative paths.
 
 ## Before DONE
 Run static gates on touched C#: `$UNITY_GROK_ROOT/tools/gates/run_unity_static_gates.sh`
-Run `./scripts/doctor.sh` when environment health is uncertain.
+Run `./scripts/doctor.sh` when environment health is uncertain.\n
+
+## Env
+- `UNITY_GROK_ROOT` — package install root (export via `./scripts/bootstrap.sh`)
+- `GROK_PLUGIN_ROOT` — this `plugin/` directory when the plugin is installed
+- MCP: see `plugin/.mcp.json`; blender-gen/vision-check wrappers under `plugin/mcp-wrappers/`
+  self-discover the package root when env is unset

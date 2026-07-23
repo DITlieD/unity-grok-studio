@@ -1,0 +1,14 @@
+# Default asset style for blender-gen validators (standalone package)
+style: default
+palette: neutral
+tri_budgets:
+  prop: 5000
+  wall: 20000
+  environment: 50000
+  default: 50000
+default_tri_budget: 50000
+texel_density:
+  min: 64
+  max: 2048
+  target: 512
+tile_size_m: 1.0

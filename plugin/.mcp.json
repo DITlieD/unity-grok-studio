@@ -9,10 +9,16 @@
       ]
     },
     "blender-gen": {
-      "command": "${UNITY_GROK_ROOT}/mcp/wrappers/blender-gen.sh"
+      "command": "bash",
+      "args": [
+        "${GROK_PLUGIN_ROOT}/mcp-wrappers/blender-gen.sh"
+      ]
     },
     "vision-check": {
-      "command": "${UNITY_GROK_ROOT}/mcp/wrappers/vision-check.sh"
+      "command": "bash",
+      "args": [
+        "${GROK_PLUGIN_ROOT}/mcp-wrappers/vision-check.sh"
+      ]
     }
   }
 }

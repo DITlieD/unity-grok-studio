@@ -7,21 +7,34 @@ fail>pass>fail across 3 loops => STOP + escalate.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Callable
 
-ASSET_GEN = Path("$UNITY_GROK_ROOT/.claude/tools/asset_gen")
-if str(ASSET_GEN) not in sys.path:
-    sys.path.insert(0, str(ASSET_GEN))
+
+def _package_root() -> Path:
+    env = os.environ.get("UNITY_GROK_ROOT")
+    if env:
+        return Path(env).resolve()
+    # mcp/blender-gen/lib/blender_gen/review_loop.py -> parents[4] = package root
+    return Path(__file__).resolve().parents[4]
+
+
+def _asset_gen() -> Path:
+    return _package_root() / "tools" / "asset_gen"
 
 
 def _run_validator(script: str, args: list[str]) -> tuple[int, str]:
-    py = Path("$UNITY_GROK_ROOT/.claude/tools/asset_gen/.venv/bin/python")
+    root = _package_root()
+    py = root / ".venv" / "bin" / "python"
     if not py.exists():
         py = Path(sys.executable)
-    cmd = [str(py), str(ASSET_GEN / script), *args]
+    asset_gen = _asset_gen()
+    if str(asset_gen) not in sys.path:
+        sys.path.insert(0, str(asset_gen))
+    cmd = [str(py), str(asset_gen / script), *args]
     r = subprocess.run(cmd, capture_output=True, text=True)
     return r.returncode, (r.stdout or "") + (r.stderr or "")
 
@@ -46,6 +59,9 @@ def run_material_validators(maps_dir: Path) -> dict[str, Any]:
 
 def _vision_or_unavailable(image_path: Path, context: str) -> dict[str, Any]:
     try:
+        ag = str(_asset_gen())
+        if ag not in sys.path:
+            sys.path.insert(0, ag)
         from vision_client import vision_check  # type: ignore
     except ImportError:
         return {
@@ -59,11 +75,9 @@ def _vision_or_unavailable(image_path: Path, context: str) -> dict[str, Any]:
 def _param_revision(params: dict, critique: dict, validators: dict) -> tuple[dict, str]:
     """Revise ONE param group based on validators/vision. Returns (new_params, group)."""
     new = dict(params)
-    # Prefer measured validator failures (mortar_depth reads height maps)
     mortar_out = (validators.get("mortar_depth") or {}).get("output") or ""
     if not validators.get("pass"):
         if (validators.get("mortar_depth") or {}).get("exit", 0) != 0:
-            # deep joints on maps → tighten mortar param and regen same seed
             cur = float(new.get("mortar", new.get("mortar_width", 0.06)))
             new["mortar"] = max(0.012, min(cur * 0.4, 0.02))
             new.pop("mortar_width", None)
@@ -87,7 +101,6 @@ def _param_revision(params: dict, critique: dict, validators: dict) -> tuple[dic
             if "repeat" in note.lower():
                 new["variation"] = min(0.35, float(new.get("variation", 0.15)) * 1.3)
                 return new, "variation"
-    # default: slightly tighten mortar
     if "mortar" in new:
         new["mortar"] = max(0.012, float(new["mortar"]) * 0.85)
         return new, "mortar"
@@ -123,7 +136,6 @@ def generate_with_review(
         else:
             diag = out_dir / diagnostic_name
             if not diag.exists():
-                # any png
                 pngs = list(out_dir.glob("*.png"))
                 diag = pngs[0] if pngs else diag
             if diag.exists():
@@ -133,7 +145,6 @@ def generate_with_review(
             else:
                 critique = {"unavailable": True, "reason": "no diagnostic image", "items": []}
 
-        # track oscillation
         for it in critique.get("items") or []:
             name = it.get("item") or "?"
             item_verdicts.setdefault(name, []).append(it.get("verdict", "unknown"))
@@ -145,7 +156,7 @@ def generate_with_review(
 
         vision_fail = False
         if critique.get("unavailable"):
-            vision_fail = False  # skip-with-announcement, do not treat as pass or hard fail
+            vision_fail = False
         else:
             for it in critique.get("items") or []:
                 if it.get("verdict") in ("fail", "unknown"):
@@ -187,10 +198,8 @@ def generate_with_review(
         if i == max_iters - 1:
             break
 
-        # measured validator fail outranks vision pass
         new_params, group = _param_revision(params, critique, vals)
         history[-1]["revision_group"] = group
-        # keep same seed
         new_params["seed"] = seed
         params = new_params
 

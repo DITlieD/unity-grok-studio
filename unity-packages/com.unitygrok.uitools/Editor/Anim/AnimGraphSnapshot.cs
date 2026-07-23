@@ -9,7 +9,7 @@ namespace UnityGrok.UITools.Anim
 {
     public static class AnimGraphSnapshot
     {
-        [MenuItem("Tools/UI Tools/Snapshot Animator Graph")]
+        [MenuItem("Tools/UnityGrok/Snapshot Animator Graph")]
         public static void SnapshotSelectionMenu()
         {
             var sel = Selection.activeObject;

@@ -12,7 +12,7 @@ from .walls import _box
 
 
 def gen_crate(
-    game_slug: str = "embervow",
+    game_slug: str = "default",
     seed: int = 184,
     *,
     size: float = 1.0,

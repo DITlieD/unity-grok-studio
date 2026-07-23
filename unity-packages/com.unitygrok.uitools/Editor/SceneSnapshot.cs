@@ -10,7 +10,7 @@ namespace UnityGrok.UITools
     {
         const float MinPixelSize = 2f;
 
-        [MenuItem("Tools/UI Tools/Snapshot Scene Geometry")]
+        [MenuItem("Tools/UnityGrok/Snapshot Scene Geometry")]
         public static void SnapshotSceneMenu()
         {
             Debug.Log($"SceneSnapshot wrote {SnapshotScene()}");

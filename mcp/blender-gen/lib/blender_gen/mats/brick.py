@@ -18,7 +18,7 @@ from .masks import brick_mask, tileable_value_noise
 
 
 def gen_brick_material(
-    game_slug: str = "embervow",
+    game_slug: str = "default",
     seed: int = 184,
     *,
     size: int = 2048,

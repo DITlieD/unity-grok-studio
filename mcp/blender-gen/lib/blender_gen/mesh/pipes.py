@@ -39,7 +39,7 @@ def _cyl(ax0, ax1, radius: float, segs: int = 8):
 
 
 def gen_pipes(
-    game_slug: str = "embervow",
+    game_slug: str = "default",
     seed: int = 184,
     *,
     length: float = 4.0,

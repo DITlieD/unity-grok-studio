@@ -45,7 +45,7 @@ def blender_gen_version() -> dict[str, Any]:
 
 @mcp.tool()
 def gen_brick_material_tool(
-    game_slug: str = "embervow",
+    game_slug: str = "default",
     seed: int = 184,
     size: int = 2048,
     mortar: float = 0.02,
@@ -75,28 +75,28 @@ def gen_brick_material_tool(
 
 
 @mcp.tool()
-def gen_stone_material_tool(game_slug: str = "embervow", seed: int = 184, size: int = 2048) -> dict:
+def gen_stone_material_tool(game_slug: str = "default", seed: int = 184, size: int = 2048) -> dict:
     return gen_stone_material(game_slug=game_slug, seed=seed, size=size)
 
 
 @mcp.tool()
-def gen_wood_material_tool(game_slug: str = "embervow", seed: int = 184, size: int = 2048) -> dict:
+def gen_wood_material_tool(game_slug: str = "default", seed: int = 184, size: int = 2048) -> dict:
     return gen_wood_material(game_slug=game_slug, seed=seed, size=size)
 
 
 @mcp.tool()
-def gen_metal_material_tool(game_slug: str = "embervow", seed: int = 184, size: int = 2048) -> dict:
+def gen_metal_material_tool(game_slug: str = "default", seed: int = 184, size: int = 2048) -> dict:
     return gen_metal_material(game_slug=game_slug, seed=seed, size=size)
 
 
 @mcp.tool()
-def gen_trim_material_tool(game_slug: str = "embervow", seed: int = 184, size: int = 2048) -> dict:
+def gen_trim_material_tool(game_slug: str = "default", seed: int = 184, size: int = 2048) -> dict:
     return gen_trim_material(game_slug=game_slug, seed=seed, size=size)
 
 
 @mcp.tool()
 def gen_parametric_wall_tool(
-    game_slug: str = "embervow",
+    game_slug: str = "default",
     seed: int = 184,
     length: float = 12.0,
     height: float = 4.0,
@@ -124,28 +124,28 @@ def gen_parametric_wall_tool(
 
 
 @mcp.tool()
-def gen_crate_tool(game_slug: str = "embervow", seed: int = 184, size: float = 1.0) -> dict:
+def gen_crate_tool(game_slug: str = "default", seed: int = 184, size: float = 1.0) -> dict:
     return gen_crate(game_slug=game_slug, seed=seed, size=size)
 
 
 @mcp.tool()
-def gen_arch_tool(game_slug: str = "embervow", seed: int = 184, width: float = 4.0, height: float = 3.0) -> dict:
+def gen_arch_tool(game_slug: str = "default", seed: int = 184, width: float = 4.0, height: float = 3.0) -> dict:
     return gen_arch(game_slug=game_slug, seed=seed, width=width, height=height)
 
 
 @mcp.tool()
-def gen_pipes_tool(game_slug: str = "embervow", seed: int = 184, length: float = 4.0) -> dict:
+def gen_pipes_tool(game_slug: str = "default", seed: int = 184, length: float = 4.0) -> dict:
     return gen_pipes(game_slug=game_slug, seed=seed, length=length)
 
 
 @mcp.tool()
-def gen_stairs_tool(game_slug: str = "embervow", seed: int = 184, steps: int = 8) -> dict:
+def gen_stairs_tool(game_slug: str = "default", seed: int = 184, steps: int = 8) -> dict:
     return gen_stairs(game_slug=game_slug, seed=seed, steps=steps)
 
 
 @mcp.tool()
 def mesh_retexture_tool(
-    game_slug: str = "embervow",
+    game_slug: str = "default",
     input_glb: str = "",
     style_prompt: str = "weathered stone",
     seed: int = 0,
@@ -155,14 +155,14 @@ def mesh_retexture_tool(
 
 
 @mcp.tool()
-def mesh_text_to_3d_tool(game_slug: str = "embervow", prompt: str = "", seed: int = 0) -> dict:
+def mesh_text_to_3d_tool(game_slug: str = "default", prompt: str = "", seed: int = 0) -> dict:
     return mesh_text_to_3d(game_slug, prompt, seed=seed)
 
 
 @mcp.tool()
 def generate_with_review_tool(
     kind: str = "brick",
-    game_slug: str = "embervow",
+    game_slug: str = "default",
     seed: int = 184,
     mortar: float = 0.06,
     variation: float = 0.15,

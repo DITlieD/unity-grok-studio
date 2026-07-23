@@ -184,14 +184,19 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--prompt", default="a person walks in a circle")
     ap.add_argument("--seed", type=int, default=42)
-    ap.add_argument("--game", default="embervow")
+    ap.add_argument("--game", default="default")
     ap.add_argument("--synthetic", action="store_true")
+    ap.add_argument("-o", "--output", default=None, help="Write synthetic/live payload JSON path")
     args = ap.parse_args()
     if args.synthetic:
         clip = synthesize_core_skeleton_clip(seed=args.seed)
-        out = anim_out_dir(args.game)
-        out.mkdir(parents=True, exist_ok=True)
-        p = out / f"ardy_synthetic_{args.seed}.json"
+        if args.output:
+            p = Path(args.output)
+            p.parent.mkdir(parents=True, exist_ok=True)
+        else:
+            out = anim_out_dir(args.game)
+            out.mkdir(parents=True, exist_ok=True)
+            p = out / f"ardy_synthetic_{args.seed}.json"
         p.write_text(json.dumps(clip, indent=2) + "\n")
         print(json.dumps({"status": "ok", "payload_path": str(p)}))
     else:

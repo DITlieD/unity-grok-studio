@@ -22,7 +22,7 @@ AnimGraphSnapshot.cs   LEG 1 core. Static dump of an AnimatorController (asset p
                        transitions), per state (motion clip length / blend tree, speed + speed
                        param, transitions with conditions/exitTime/duration/interruption), per clip
                        the AnimationEvents (function, time, normalizedTime, args). Recurses sub
-                       state machines. MenuItem "Tools/UI Tools/Snapshot Animator Graph".
+                       state machines. MenuItem "Tools/UnityGrok/Snapshot Animator Graph".
 AnimSnapshotTool.cs    anim_snapshot   (read-only)  -> writes the graph json, returns it parsed
                        inline (controller path OR scene object with an Animator).
 AnimClipFilmstrip.cs   LEG 3 core. AnimationMode-samples a clip on a scene model at K normalized

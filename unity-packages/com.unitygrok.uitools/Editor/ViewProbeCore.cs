@@ -172,7 +172,7 @@ namespace UnityGrok.UITools
 
         static int Gcd(int a, int b) { while (b != 0) { (a, b) = (b, a % b); } return a == 0 ? 1 : a; }
 
-        [MenuItem("Tools/UI Tools/View Probe Self-Test")]
+        [MenuItem("Tools/UnityGrok/View Probe Self-Test")]
         static void SelfTest()
         {
             int pass = 0, fail = 0;

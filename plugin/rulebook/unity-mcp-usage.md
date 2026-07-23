@@ -45,7 +45,7 @@ Performance:
 WHEN NOT TO USE THE MCP
 
   - Pure logic edits to a .cs file that don't need editor state — use Edit / Write directly. Faster, no Unity round-trip.
-  - Reading project structure or .cs symbols — Unity MAP-file (.projects/<folder>/map.txt) is faster, deterministic, and works without Unity running. Map first, MCP second.
+  - Reading project structure or .cs symbols — Unity MAP-file ($UNITY_PROJECT/map.txt) is faster, deterministic, and works without Unity running. Map first, MCP second.
   - Bulk read of source code — Read / Grep / Glob, not MCP. The MCP is for editor state, not source navigation.
   - Memory-bank / workflow / .claude file edits — never. These are tooling files, not Unity assets.
   - Cross-game operations — MCP binds to ONE Unity Editor instance. The bridge connects to whichever Editor is currently open. Switching games = restart Editor + restart bridge.

@@ -1,6 +1,6 @@
 Unity architecture reference (OPT-IN guidance, new-work only)
 
-Loaded by: scaffolding a NEW game, a NEW feature/system module, or an explicit architecture/refactor decision on how to lay out a Unity codebase. NOT always-on, and NOT a hard rule. This is the gold-standard end-state dr-5/dr-6 recommend; existing games (EO multi-dev per-folder, ZC solo) do not match it and must NOT be force-migrated. Use it to shape new modules, and as the target when someone explicitly asks to restructure.
+Loaded by: scaffolding a NEW game, a NEW feature/system module, or an explicit architecture/refactor decision on how to lay out a Unity codebase. NOT always-on, and NOT a hard rule. This is the gold-standard end-state dr-5/dr-6 recommend; existing games with established layouts must NOT be force-migrated. Use it to shape new modules, and as the target when someone explicitly asks to restructure.
 
 Relationship to the hard rules: codeRules.md (1-28) and gameRules.md (1-39) are the always-on invariants and already cover null/alloc/lifecycle/networking/testing/IDD. This file does not restate them; it FRAMES them into a layered model and adds the structural + design-pattern choices those rule files leave open. unity-asset-hygiene.md holds the always-on asset/asmdef/addressables invariants. Grounded in dr-5 + dr-6 (Unity 6 large-project structure + scalable architecture, both cite Unity 6 manuals, Unity Learn MVP/MVVM, Microsoft DI, VContainer docs).
 

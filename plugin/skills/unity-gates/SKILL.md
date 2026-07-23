@@ -11,10 +11,10 @@ runtime backstop. **Never claim DONE on Unity C# without running the relevant ga
 
 PACKAGE LOCATION
 
-Gates live under the plugin root:
+Gates live under the package tools root:
 
 ```
-$GROK_PLUGIN_ROOT/gates/
+$UNITY_GROK_ROOT/tools/gates/
   toban001_check.py
   unity_symbol_census.py
   mono_wire_census.py
@@ -23,20 +23,20 @@ $GROK_PLUGIN_ROOT/gates/
   run_unity_static_gates.sh
 ```
 
-If `GROK_PLUGIN_ROOT` is unset, resolve via the installed `unity-grok` plugin path
-(`grok plugin details unity-grok`) or the checkout `packs/unity-grok/gates/`.
+If `UNITY_GROK_ROOT` is unset, export it from bootstrap (`source ./scripts/bootstrap.sh` or
+`export UNITY_GROK_ROOT=/path/to/unity-grok-studio`).
 
 COMMANDS
 
 ```bash
 # Whole tree
-bash "$GATES/run_unity_static_gates.sh" --root /path/to/Assets
+bash "$UNITY_GROK_ROOT/tools/gates/run_unity_static_gates.sh" --root /path/to/Assets
 
 # Touched files only
-bash "$GATES/run_unity_static_gates.sh" --files a.cs,b.cs --project /path/to/UnityProject
+bash "$UNITY_GROK_ROOT/tools/gates/run_unity_static_gates.sh" --files a.cs,b.cs --project /path/to/UnityProject
 
 # Package fixture smoke
-bash "$GATES/run_unity_static_gates.sh" --fixture
+bash "$UNITY_GROK_ROOT/tools/gates/run_unity_static_gates.sh" --fixture
 ```
 
 Individual:

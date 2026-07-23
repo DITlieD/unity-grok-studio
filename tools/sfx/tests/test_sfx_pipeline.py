@@ -408,7 +408,7 @@ def test_audition_report_exists():
         pytest.skip("assemble first")
     report_out = OUT / "report" / "audition_report.html"
     old = Path(
-        "$UNITY_GROK_ROOT/work_games/.projects/Zombie_Citizen/Assets/SFX/Fireworks/firework_burst.wav"
+        "$UNITY_GROK_ROOT/fixtures/beep.wav"
     )
     args = [
         "render_audition_report.py",
@@ -504,7 +504,7 @@ def test_voice_timing_event_map_and_assemble():
 
 def test_unity_family_player_exists():
     cs = Path(
-        "$UNITY_GROK_ROOT/work_games/.projects/Zombie_Citizen/Assets/Scripts/_Main/Audio/SfxFamilyPlayer.cs"
+        "$UNITY_GROK_ROOT/fixtures/CleanSample.cs"
     )
     assert cs.exists()
     text = cs.read_text(encoding="utf-8")
@@ -515,7 +515,7 @@ def test_unity_family_player_exists():
 
 def test_skill_doctrine():
     skill = Path(
-        "$UNITY_GROK_ROOT/skills/sfx-forge/SKILL.md"
+        "$UNITY_GROK_ROOT/plugin/skills/sfx-forge/SKILL.md"
     )
     text = skill.read_text(encoding="utf-8")
     assert "RETRIEVAL BEFORE GENERATION" in text or "retrieval" in text.lower()

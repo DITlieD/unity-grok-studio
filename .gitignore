@@ -9,3 +9,7 @@ outputs/
 node_modules/
 *.log
 .DS_Store
+tools/sfx/_test_sfx_lib/
+tools/sfx/_test_out/
+map.txt
+*.bvh

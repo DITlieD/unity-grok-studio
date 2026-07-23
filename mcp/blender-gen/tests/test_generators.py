@@ -11,7 +11,10 @@ import pytest
 
 LIB = Path(__file__).resolve().parents[1] / "lib"
 sys.path.insert(0, str(LIB))
-ASSET_GEN = Path("$UNITY_GROK_ROOT/.claude/tools/asset_gen")
+_PKG = Path(__file__).resolve().parents[3]  # unity-grok-studio root
+import os as _os
+_PKG = Path(_os.environ.get("UNITY_GROK_ROOT", _PKG))
+ASSET_GEN = _PKG / "tools" / "asset_gen"
 sys.path.insert(0, str(ASSET_GEN))
 
 from blender_gen.mats.brick import gen_brick_material  # noqa: E402
@@ -27,13 +30,11 @@ from blender_gen.mesh.stairs import gen_stairs  # noqa: E402
 from blender_gen.review_loop import generate_with_review  # noqa: E402
 from vision_client import vision_check, parse_check_json, treat_unknown_as_fail  # noqa: E402
 
-PY = Path("$UNITY_GROK_ROOT/.claude/tools/asset_gen/.venv/bin/python")
+PY = _PKG / ".venv" / "bin" / "python"
 if not PY.exists():
     PY = Path(sys.executable)
 
-STYLE = Path(
-    "$UNITY_GROK_ROOT/work_games/workflow/memory-bank/games/embervow/asset-style.yaml"
-)
+STYLE = _PKG / "config" / "asset-style.yaml"
 
 
 def _val(script: str, args: list[str]) -> subprocess.CompletedProcess:
@@ -266,10 +267,10 @@ def test_meshy_wrap_unavailable_without_key(tmp_path: Path, monkeypatch):
 
     pass  # paths.WORK_GAMES legacy
     monkeypatch.setattr(mw, "generated_root", lambda slug: tmp_path / "Assets" / "Generated")
-    r = mesh_retexture("embervow", tmp_path / "missing.glb", seed=1)
+    r = mesh_retexture("default", tmp_path / "missing.glb", seed=1)
     assert r["status"] == "unavailable"
     assert r.get("fallback") == "procedural"
-    r2 = mesh_text_to_3d("embervow", "a crate", seed=2)
+    r2 = mesh_text_to_3d("default", "a crate", seed=2)
     assert r2["status"] == "unavailable"
 
 

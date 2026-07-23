@@ -33,7 +33,7 @@ namespace UnityGrok.UITools
         string _rawAbs, _ts;
         double _capStart;
 
-        [MenuItem("Tools/UI Tools/View Probe")]
+        [MenuItem("Tools/UnityGrok/View Probe")]
         static void Open() => GetWindow<ViewProbe>("View Probe").minSize = new Vector2(420, 360);
 
         static string ProjectDir => Directory.GetParent(Application.dataPath).FullName;

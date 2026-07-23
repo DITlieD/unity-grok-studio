@@ -12,7 +12,7 @@ from .walls import _box
 
 
 def gen_arch(
-    game_slug: str = "embervow",
+    game_slug: str = "default",
     seed: int = 184,
     *,
     width: float = 4.0,

@@ -44,7 +44,7 @@ def _box(cx, cy, cz, sx, sy, sz):
 
 
 def gen_parametric_wall(
-    game_slug: str = "embervow",
+    game_slug: str = "default",
     seed: int = 184,
     *,
     length: float = 12.0,

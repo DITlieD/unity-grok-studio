@@ -10,13 +10,13 @@ namespace UnityGrok.UITools
 {
     public static class UISnapshot
     {
-        [MenuItem("Tools/UI Tools/Snapshot Active UI Toolkit Documents")]
+        [MenuItem("Tools/UnityGrok/Snapshot Active UI Toolkit Documents")]
         public static void SnapshotUIToolkitMenu()
         {
             Debug.Log($"UISnapshot wrote {SnapshotUIToolkit()}");
         }
 
-        [MenuItem("Tools/UI Tools/Snapshot Active uGUI Canvases")]
+        [MenuItem("Tools/UnityGrok/Snapshot Active uGUI Canvases")]
         public static void SnapshotUGUIMenu()
         {
             Debug.Log($"UISnapshot wrote {SnapshotUGUI()}");
