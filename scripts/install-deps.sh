@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-WITH_BLENDER=0; ASSUME_YES=0; WITH_DEVIN_BRIDGE=0
+WITH_BLENDER=0; ASSUME_YES=0; WITH_DEVIN_BRIDGE=0; WITH_LIA=0
 for a in "$@"; do
   case "$a" in
     --with-blender) WITH_BLENDER=1;;
     --with-devin-bridge) WITH_DEVIN_BRIDGE=1;;
+    --with-lia) WITH_LIA=1;;
     --assume-yes|-y) ASSUME_YES=1;;
   esac
 done
@@ -51,6 +52,21 @@ if [[ $WITH_DEVIN_BRIDGE -eq 1 ]]; then
     echo "================================"
   else
     echo "WARN: tools/devin-bridge/requirements.txt missing"
+  fi
+fi
+# Optional LIA Trust ≥ 0.3.0 (Bucket C — user network; PreToolUse GATE)
+if [[ $WITH_LIA -eq 1 ]]; then
+  echo "Installing LIA Trust from DITlieD/lia-trust main (expect ≥ 0.3.0)..."
+  curl -fsSL https://raw.githubusercontent.com/DITlieD/lia-trust/main/install.sh | bash || {
+    echo "WARN: LIA install script failed (network or remote). See docs/LIA-TRUST.md"
+  }
+  if command -v lia >/dev/null 2>&1; then
+    echo -n "lia --version: "
+    lia --version || true
+    echo "Next: lia doctor && lia status"
+    echo "If needed: lia install --apply-live"
+  else
+    echo "WARN: lia not on PATH after install; open a new shell or check install docs."
   fi
 fi
 if command -v grok >/dev/null 2>&1; then

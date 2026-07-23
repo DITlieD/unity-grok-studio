@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"[unity-grok-studio] ROOT=${UNITY_GROK_ROOT:-unset} plugin=${GROK_PLUGIN_ROOT:-unset}. Prefer free-auto + FreeLLMAPI vision. Run ./scripts/doctor.sh.\"",
+            "command": "echo \"[unity-grok-studio] ROOT=${UNITY_GROK_ROOT:-unset} plugin=${GROK_PLUGIN_ROOT:-unset}. Prefer free-auto + FreeLLMAPI vision. Prefer LIA Trust >= 0.3.0 for tool trust. Run ./scripts/doctor.sh.\"",
             "timeout": 5
           }
         ]

@@ -14,6 +14,7 @@ Never hardcode absolute owner machine paths. Prefer env + relative paths.
 3. blender-gen without Blender → fail soft + install hint.
 4. Unity MCP without Editor → server may start; Editor tools unavailable until connected.
 5. img2threejs / ViewProbe image workflows need vision (FreeLLMAPI vision model or pre-describe hook).
+6. Prefer **LIA Trust ≥ 0.3.0** for PreToolUse tool trust (v0.2.x broken); hook fail-opens if missing — see `docs/LIA-TRUST.md`.
 
 ## Before DONE
 Run static gates on touched C#: `$UNITY_GROK_ROOT/tools/gates/run_unity_static_gates.sh`

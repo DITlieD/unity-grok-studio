@@ -11,6 +11,7 @@
 #   LIA_KEY_FILE      default: $LIA_HOME/keys/signing.hex
 #   LIA_KEY_ID        default: lia-install
 #   LIA_ADAPTER       default: claude-code
+#   LIA_REQUIRED=1    fail-closed if missing or version < 0.3.0 (default fail-open)
 set -euo pipefail
 
 LIA_HOME="${LIA_HOME:-$HOME/.lia-trust}"
@@ -20,15 +21,54 @@ LIA_JOURNAL="${LIA_JOURNAL:-$LIA_HOME/journal/default.db}"
 LIA_KEY_FILE="${LIA_KEY_FILE:-$LIA_HOME/keys/signing.hex}"
 LIA_KEY_ID="${LIA_KEY_ID:-lia-install}"
 LIA_ADAPTER="${LIA_ADAPTER:-claude-code}"
+LIA_REQUIRED="${LIA_REQUIRED:-0}"
+LIA_MIN_MAJOR=0
+LIA_MIN_MINOR=3
+LIA_MIN_PATCH=0
+LIA_INSTALL_HINT='curl -fsSL https://raw.githubusercontent.com/DITlieD/lia-trust/main/install.sh | bash'
+
+lia_fail() {
+  local reason="$1"
+  if [[ "${LIA_REQUIRED}" == "1" ]]; then
+    printf '%s\n' "{\"decision\":\"deny\",\"reason\":$(python3 -c 'import json,sys; print(json.dumps(sys.argv[1]))' "$reason")}"
+    exit 0
+  fi
+  printf '%s\n' "{\"decision\":\"allow\",\"reason\":$(python3 -c 'import json,sys; print(json.dumps(sys.argv[1]))' "$reason")}"
+  exit 0
+}
 
 if [[ -z "${LIA_BIN}" || ! -x "${LIA_BIN}" ]]; then
-  # Fail-open only when LIA is not installed: coworkers may not have it yet.
-  # Documented: run bootstrap / lia install. Explicit deny still requires LIA.
-  echo '{"decision":"allow","reason":"lia binary missing; install lia-trust for GATE mediation"}'
-  exit 0
+  # Default fail-open when LIA is not installed; LIA_REQUIRED=1 denies.
+  lia_fail "lia binary missing; install LIA Trust >= 0.3.0: ${LIA_INSTALL_HINT}"
+fi
+
+# Recommend ≥ 0.3.0 (v0.2.x broken for multi-harness / Grok). Fail-open unless LIA_REQUIRED=1.
+LIA_VER_OUT="$("${LIA_BIN}" --version 2>&1 || true)"
+if [[ -z "${LIA_VER_OUT}" ]]; then
+  LIA_VER_OUT="$("${LIA_BIN}" version 2>&1 || true)"
+fi
+LIA_VER_PARSED="$(printf '%s' "${LIA_VER_OUT}" | python3 -c '
+import re, sys
+text = sys.stdin.read()
+m = re.search(r"v?(\d+)\.(\d+)\.(\d+)", text)
+if not m:
+    sys.exit(1)
+print(f"{m.group(1)}.{m.group(2)}.{m.group(3)}")
+' 2>/dev/null || true)"
+if [[ -z "${LIA_VER_PARSED}" ]]; then
+  lia_fail "lia version unparsed (${LIA_VER_OUT//$'\n'/ }); upgrade to >= 0.3.0: ${LIA_INSTALL_HINT}"
+fi
+IFS=. read -r LIA_MAJ LIA_MIN LIA_PAT <<< "${LIA_VER_PARSED}"
+if (( LIA_MAJ < LIA_MIN_MAJOR )) || \
+   { (( LIA_MAJ == LIA_MIN_MAJOR )) && (( LIA_MIN < LIA_MIN_MINOR )); } || \
+   { (( LIA_MAJ == LIA_MIN_MAJOR )) && (( LIA_MIN == LIA_MIN_MINOR )) && (( LIA_PAT < LIA_MIN_PATCH )); }; then
+  lia_fail "lia ${LIA_VER_PARSED} < 0.3.0 (v0.2.x broken for Grok); reinstall: ${LIA_INSTALL_HINT}"
 fi
 
 if [[ ! -f "${LIA_CONFIG}" || ! -f "${LIA_KEY_FILE}" ]]; then
+  if [[ "${LIA_REQUIRED}" == "1" ]]; then
+    lia_fail "lia home not configured; run: lia install --apply-live"
+  fi
   echo '{"decision":"allow","reason":"lia home not configured; run lia install --apply-live"}'
   exit 0
 fi

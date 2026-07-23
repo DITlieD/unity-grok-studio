@@ -13,6 +13,7 @@ End-to-end procedure for a machine that already has (or will install) Unity, Gro
 | FreeLLMAPI (optional) | `free-auto` / vision | run your FreeLLMAPI instance on `:3001` |
 | Devin Desktop (optional) | free Devin models | Cognition installer; own account |
 | Blender 5.x (optional) | blender-gen materials/meshes | see OS section below |
+| LIA Trust ≥ 0.3.0 (optional recommended) | PreToolUse GATE mediation | see [LIA-TRUST.md](LIA-TRUST.md) |
 
 ## 1. Clone + bootstrap
 
@@ -30,9 +31,12 @@ export UNITY_GROK_ROOT="$(pwd)"
 # Optional:
 ./scripts/install-deps.sh --with-blender --assume-yes
 ./scripts/install-deps.sh --with-devin-bridge
+./scripts/install-deps.sh --with-lia          # LIA Trust ≥ 0.3.0 (recommended GATE)
 ```
 
 `--with-devin-bridge` only creates `tools/devin-bridge/.venv` and prints login instructions. It does **not** start the proxy without credentials.
+
+`--with-lia` runs the public install one-liner from `DITlieD/lia-trust` main (user network). Prefer **≥ 0.3.0**; v0.2.x is broken for multi-harness/Grok. Details: [LIA-TRUST.md](LIA-TRUST.md).
 
 ## 3. FreeLLMAPI one-liner pointers
 
@@ -124,7 +128,7 @@ Details: [UNITY-INSTALL.md](UNITY-INSTALL.md).
 ./scripts/doctor.sh --json
 ```
 
-Expect components including: `python`, `uvx`, `grok_plugin`, `blender`, `unity_editor`, `freellmapi`, `devin_bridge`, `devin_credentials`, MCP wrappers, UPM packages.
+Expect components including: `python`, `uvx`, `grok_plugin`, `blender`, `unity_editor`, `freellmapi`, `devin_bridge`, `devin_credentials`, `lia` (≥ 0.3.0 → `ok`), MCP wrappers, UPM packages.
 
 Statuses:
 
@@ -150,4 +154,5 @@ export UNITY_GROK_ROOT=/path/to/unity-grok-studio
 - [ ] Plugin enabled
 - [ ] Unity project wired if doing Editor work
 - [ ] Blender on PATH if using blender-gen
+- [ ] LIA Trust ≥ 0.3.0 if using PreToolUse GATE (`lia --version`; doctor `[ok] lia`)
 - [ ] `python tools/img2threejs/forge/stage1_intake/probe_image.py fixtures/ref.png` exits 0

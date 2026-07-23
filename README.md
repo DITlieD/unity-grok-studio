@@ -13,6 +13,7 @@ Standalone **Grok Build plugin** + vendored MCP servers + CLI tools + optional U
 | **Optional free coding** | FreeLLMAPI on `:3001` → models `free-auto` / `free-coder` |
 | **Optional free Devin models** | Devin Desktop (own account) + `./tools/devin-bridge/run.sh` → `devin-free` / `devin-glm` / `devin-swe` |
 | **Optional materials/meshes** | Blender 5.x on `PATH` (or `BLENDER_BIN`) for blender-gen |
+| **Optional recommended GATE** | [LIA Trust ≥ 0.3.0](docs/LIA-TRUST.md) for PreToolUse tool trust (v0.2.x broken) |
 | **Optional** | MCP For Unity (CoplayDev) so the `unity` MCP can drive the Editor |
 
 ---
@@ -37,7 +38,19 @@ For a fuller dependency pass (uv + optional Blender/bridge):
 ./scripts/install-deps.sh                 # core
 ./scripts/install-deps.sh --with-blender --assume-yes   # optional Blender
 ./scripts/install-deps.sh --with-devin-bridge           # bridge venv only; does not start without login
+./scripts/install-deps.sh --with-lia                    # optional LIA Trust ≥ 0.3.0
 ```
+
+### Optional: LIA Trust ≥ 0.3.0
+
+Recommended for PreToolUse GATE mediation. **Do not use v0.2.x** (broken for multi-harness/Grok). Plugin fail-opens if LIA is missing.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/DITlieD/lia-trust/main/install.sh | bash
+lia --version   # expect 0.3.0+
+```
+
+Full notes: [docs/LIA-TRUST.md](docs/LIA-TRUST.md).
 
 ---
 
@@ -153,6 +166,7 @@ python tools/img2threejs/forge/stage1_intake/probe_image.py fixtures/ref.png
 ## Docs
 
 - [SETUP.md](docs/SETUP.md) — full coworker procedure
+- [LIA-TRUST.md](docs/LIA-TRUST.md) — optional PreToolUse GATE (≥ 0.3.0)
 - [DEVIN-BRIDGE.md](docs/DEVIN-BRIDGE.md)
 - [TOOL-CATALOG.md](docs/TOOL-CATALOG.md)
 - [UNITY-INSTALL.md](docs/UNITY-INSTALL.md)

@@ -61,6 +61,50 @@ add('mcp_blender_gen', 'ok' if (root/'mcp'/'wrappers'/'blender-gen.sh').exists()
 add('mcp_vision_check', 'ok' if (root/'mcp'/'wrappers'/'vision-check.sh').exists() else 'missing')
 add('unity_uitools_package', 'ok' if (root/'unity-packages'/'com.unitygrok.uitools').is_dir() else 'missing')
 add('unity_project_uitools', 'warn', 'run wire-unity-project.sh for a project', './scripts/wire-unity-project.sh /path/to/Project')
+# LIA Trust (optional PreToolUse GATE) — recommend ≥ 0.3.0; v0.2.x broken for multi-harness/Grok
+import re, subprocess
+LIA_INSTALL = 'curl -fsSL https://raw.githubusercontent.com/DITlieD/lia-trust/main/install.sh | bash'
+LIA_MIN = (0, 3, 0)
+lia_bin = shutil.which('lia')
+if not lia_bin:
+    add('lia', 'warn', 'lia not on PATH', LIA_INSTALL + '  # see docs/LIA-TRUST.md')
+else:
+    ver_str = ''
+    try:
+        r = subprocess.run([lia_bin, '--version'], capture_output=True, text=True, timeout=5)
+        ver_str = (r.stdout or r.stderr or '').strip().splitlines()[0] if (r.stdout or r.stderr) else ''
+    except Exception as e:
+        ver_str = f'error: {e}'
+    m = re.search(r'v?(\d+)\.(\d+)\.(\d+)', ver_str or '')
+    if not m:
+        # try `lia version` or bare digits elsewhere
+        try:
+            r2 = subprocess.run([lia_bin, 'version'], capture_output=True, text=True, timeout=5)
+            alt = (r2.stdout or r2.stderr or '').strip()
+            m = re.search(r'v?(\d+)\.(\d+)\.(\d+)', alt)
+            if m:
+                ver_str = alt.splitlines()[0] if alt else ver_str
+        except Exception:
+            pass
+    if m:
+        tup = (int(m.group(1)), int(m.group(2)), int(m.group(3)))
+        detail = ver_str or f'{tup[0]}.{tup[1]}.{tup[2]}'
+        if tup >= LIA_MIN:
+            add('lia', 'ok', detail, '')
+        else:
+            add(
+                'lia',
+                'warn',
+                f'{detail} (< 0.3.0; v0.2.x broken for multi-harness/Grok)',
+                LIA_INSTALL + '  # reinstall from DITlieD/lia-trust main',
+            )
+    else:
+        add(
+            'lia',
+            'warn',
+            f'{lia_bin} present but version unparsed ({ver_str!r}); expect 0.3.0+',
+            LIA_INSTALL + '  # reinstall from DITlieD/lia-trust main',
+        )
 ok = comps.get('python',{}).get('status')=='ok'
 payload={'ok': ok, 'components': comps}
 if as_json:

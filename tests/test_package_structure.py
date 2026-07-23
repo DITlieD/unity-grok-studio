@@ -16,7 +16,7 @@ REQUIRED = [
   'unity-packages/com.unitygrok.uitools/package.json',
   'sfx_library/README.md',
   'docs/TOOL-CATALOG.md','docs/UNITY-INSTALL.md','docs/VISION-ROUTING.md','docs/DEPENDENCIES.md',
-  'docs/SETUP.md','docs/DEVIN-BRIDGE.md',
+  'docs/SETUP.md','docs/DEVIN-BRIDGE.md','docs/LIA-TRUST.md',
 ]
 def test_required_paths_exist():
     missing = [r for r in REQUIRED if not (ROOT/r).exists()]
