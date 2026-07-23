@@ -28,6 +28,7 @@
 
 ## Unity MCP (CoplayDev)
 - Full editor surface when Unity + MCP For Unity listening
+- Optional official Unity CLI: [plan](plans/UNITY-CLI-INTEGRATION-PLAN.md) (not required; not implemented yet)
 
 ## Gates
 - toban001, unity_symbol_census, mono_wire_census, scan_unity_patterns

@@ -172,6 +172,7 @@ python tools/img2threejs/forge/stage1_intake/probe_image.py fixtures/ref.png
 - [UNITY-INSTALL.md](docs/UNITY-INSTALL.md)
 - [VISION-ROUTING.md](docs/VISION-ROUTING.md)
 - [DEPENDENCIES.md](docs/DEPENDENCIES.md)
+- [Plan: optional Unity CLI](docs/plans/UNITY-CLI-INTEGRATION-PLAN.md) — PLAN ONLY; MCP remains default Editor path
 - [EXCLUDE.md](EXCLUDE.md) — what is intentionally out
 
 ## Tests
