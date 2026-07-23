@@ -20,6 +20,48 @@ b = shutil.which('blender')
 add('blender', 'ok' if b else 'missing', b or '', 'snap install blender --classic  # or see docs/SETUP.md')
 unity_ok = shutil.which('Unity') is not None or bool(glob.glob(str(pathlib.Path.home()/'Unity'/'Hub'/'Editor'/'*'/'Editor'/'Unity')))
 add('unity_editor', 'ok' if unity_ok else 'missing', '', 'Install Unity Hub; see docs/UNITY-INSTALL.md')
+# Official standalone Unity CLI (optional companion — never fails overall doctor)
+# Distinct from Editor binary: probe `unity --version` for CLI-like success.
+import re, subprocess  # early import; LIA block also uses these
+UNITY_CLI_INSTALL = (
+    'curl -fsSL https://public-cdn.cloud.unity3d.com/hub/prod/cli/install.sh | UNITY_CLI_CHANNEL=beta bash  '
+    '# or: ./scripts/install-deps.sh --with-unity-cli  (see docs/UNITY-CLI.md)'
+)
+unity_cli_bin = shutil.which('unity')
+if not unity_cli_bin:
+    add('unity_cli', 'missing', 'unity not on PATH', UNITY_CLI_INSTALL)
+else:
+    ver_detail = unity_cli_bin
+    cli_ok = False
+    try:
+        r = subprocess.run(
+            [unity_cli_bin, '--version'],
+            capture_output=True, text=True, timeout=8,
+        )
+        out = ((r.stdout or '') + (r.stderr or '')).strip()
+        first = out.splitlines()[0] if out else ''
+        # Standalone CLI prints a version; accept success exit or version-like text.
+        # Avoid treating a bare Editor binary mis-named "unity" as ok if --version fails hard.
+        if r.returncode == 0 and (first or out):
+            cli_ok = True
+            ver_detail = first or out[:200]
+        elif re.search(r'\d+\.\d+', out) and r.returncode in (0, 1):
+            # Some builds print version on stderr with nonzero; still CLI-like.
+            cli_ok = True
+            ver_detail = first or out[:200]
+        else:
+            ver_detail = f'{unity_cli_bin} present but --version failed ({first or r.returncode})'
+    except Exception as e:
+        ver_detail = f'{unity_cli_bin} error: {e}'
+    if cli_ok:
+        add('unity_cli', 'ok', ver_detail, '')
+    else:
+        add(
+            'unity_cli',
+            'warn',
+            ver_detail,
+            UNITY_CLI_INSTALL + '  # ensure standalone CLI, not Editor binary',
+        )
 freellm='warn'
 try:
     import urllib.request
@@ -62,7 +104,6 @@ add('mcp_vision_check', 'ok' if (root/'mcp'/'wrappers'/'vision-check.sh').exists
 add('unity_uitools_package', 'ok' if (root/'unity-packages'/'com.unitygrok.uitools').is_dir() else 'missing')
 add('unity_project_uitools', 'warn', 'run wire-unity-project.sh for a project', './scripts/wire-unity-project.sh /path/to/Project')
 # LIA Trust (optional PreToolUse GATE) — recommend ≥ 0.3.0; v0.2.x broken for multi-harness/Grok
-import re, subprocess
 LIA_INSTALL = 'curl -fsSL https://raw.githubusercontent.com/DITlieD/lia-trust/main/install.sh | bash'
 LIA_MIN = (0, 3, 0)
 lia_bin = shutil.which('lia')

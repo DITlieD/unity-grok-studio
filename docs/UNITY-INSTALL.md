@@ -4,6 +4,8 @@
 
 This package focuses on **MCP For Unity** + **wiring UPM packages**, not full Editor setup.
 
+**Companion:** optional official [Unity CLI](UNITY-CLI.md) for install/open/auth. **MCP alone is enough** for the live Editor agent loop; CLI is never required.
+
 ## 1. Unity Editor (assumed)
 
 - Install Unity Hub + your project’s Editor version (e.g. 6000.x LTS).
@@ -33,12 +35,16 @@ enabled = true
 ```bash
 export UNITY_GROK_ROOT=/path/to/unity-grok-studio
 ./scripts/wire-unity-project.sh /path/to/Project
+# Opt-in only (does not replace Coplay MCP):
+# ./scripts/wire-unity-project.sh /path/to/Project --with-pipeline
 ```
 
 Adds to `Packages/manifest.json` (file: URLs into this repo):
 
 - `com.unitygrok.uitools` → ViewProbe, Placement, Anim, Vfx editors
 - `com.unitygrok.agentdebug` (optional) → runtime dumps / log bridge
+
+Default wiring does **not** add `com.unity.pipeline`. Use `--with-pipeline` only when the official CLI is present and you want pipeline eval; see [UNITY-CLI.md](UNITY-CLI.md).
 
 ## 4. Verify menus
 

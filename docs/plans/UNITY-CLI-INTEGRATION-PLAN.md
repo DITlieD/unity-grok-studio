@@ -2,7 +2,7 @@
 
 | Field | Value |
 |-------|--------|
-| **Status** | **PLAN ONLY — not implemented** |
+| **Status** | **IMPLEMENTED (Phases 0–3 + Phase 4 spike report; Coplay remains default)** |
 | **Authored** | 2026-07-24 |
 | **Author** | DITlieD |
 | **Related product** | [DITlieD/unity-grok-studio](https://github.com/DITlieD/unity-grok-studio) |

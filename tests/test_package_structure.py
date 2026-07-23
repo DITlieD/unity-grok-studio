@@ -15,8 +15,9 @@ REQUIRED = [
   'tools/devin-bridge/proxy/devin_proxy.py',
   'unity-packages/com.unitygrok.uitools/package.json',
   'sfx_library/README.md',
-  'docs/TOOL-CATALOG.md','docs/UNITY-INSTALL.md','docs/VISION-ROUTING.md','docs/DEPENDENCIES.md',
+  'docs/TOOL-CATALOG.md','docs/UNITY-INSTALL.md','docs/UNITY-CLI.md','docs/VISION-ROUTING.md','docs/DEPENDENCIES.md',
   'docs/SETUP.md','docs/DEVIN-BRIDGE.md','docs/LIA-TRUST.md',
+  'docs/plans/UNITY-CLI-INTEGRATION-PLAN.md','docs/plans/UNITY-CLI-MCP-SPIKE.md',
 ]
 def test_required_paths_exist():
     missing = [r for r in REQUIRED if not (ROOT/r).exists()]

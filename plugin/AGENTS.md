@@ -15,13 +15,25 @@ Never hardcode absolute owner machine paths. Prefer env + relative paths.
 4. Unity MCP without Editor → server may start; Editor tools unavailable until connected.
 5. img2threejs / ViewProbe image workflows need vision (FreeLLMAPI vision model or pre-describe hook).
 6. Prefer **LIA Trust ≥ 0.3.0** for PreToolUse tool trust (v0.2.x broken); hook fail-opens if missing — see `docs/LIA-TRUST.md`.
+7. **Official Unity CLI is optional.** Missing CLI must never block DONE or package work. **MCP alone is enough** for the live Editor agent loop (Coplay `mcpforunityserver` in `plugin/.mcp.json`).
+
+## Unity surfaces (CLI vs Coplay MCP)
+| Job | Prefer |
+|-----|--------|
+| Open project / list Editors / auth | `unity open $UNITY_PROJECT` when CLI on PATH |
+| Scene / GO / components / console / tests | **Coplay MCP** (default live loop) + uitools menus |
+| One-off C# inspect | CLI `unity command eval` only if pipeline present; else MCP |
+| Missing CLI | **Fail soft** — Hub paths + MCP; do not require install |
+
+Never require CLI in rulebook language. Never silent multi-GB `unity install <editor>`. Docs: `$UNITY_GROK_ROOT/docs/UNITY-CLI.md`.
 
 ## Before DONE
 Run static gates on touched C#: `$UNITY_GROK_ROOT/tools/gates/run_unity_static_gates.sh`
-Run `./scripts/doctor.sh` when environment health is uncertain.\n
+Run `./scripts/doctor.sh` when environment health is uncertain.
 
 ## Env
 - `UNITY_GROK_ROOT` — package install root (export via `./scripts/bootstrap.sh`)
 - `GROK_PLUGIN_ROOT` — this `plugin/` directory when the plugin is installed
 - MCP: see `plugin/.mcp.json`; blender-gen/vision-check wrappers under `plugin/mcp-wrappers/`
   self-discover the package root when env is unset
+

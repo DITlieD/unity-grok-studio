@@ -25,9 +25,14 @@ Package roots (under `$UNITY_GROK_ROOT`):
 Wire into a project with:
 ```bash
 ./scripts/wire-unity-project.sh /path/to/UnityProject
+# --with-pipeline is opt-in only (com.unity.pipeline); default stays uitools/agentdebug
 ```
 
 Menus: **Tools/UnityGrok/** (Editor menus).
+
+## Live Editor loop (primary)
+**Coplay MCP** (`mcpforunityserver` via `plugin/.mcp.json`) + these uitools menus are the primary live loop for scene/GO/console/tests.
+Optional official Unity CLI: open project / auth when present; **fail soft** if missing. **MCP alone is enough** — CLI is never required for DONE. See `$UNITY_GROK_ROOT/docs/UNITY-CLI.md`.
 
 ## PLACEMENT TOOLKIT (world objects, measured placement)
 Editor-only tools in `unity-packages/com.unitygrok.uitools/Editor/Placement/` (see CODEMAP.txt).

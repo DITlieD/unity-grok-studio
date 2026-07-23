@@ -15,6 +15,7 @@ Standalone **Grok Build plugin** + vendored MCP servers + CLI tools + optional U
 | **Optional materials/meshes** | Blender 5.x on `PATH` (or `BLENDER_BIN`) for blender-gen |
 | **Optional recommended GATE** | [LIA Trust ≥ 0.3.0](docs/LIA-TRUST.md) for PreToolUse tool trust (v0.2.x broken) |
 | **Optional** | MCP For Unity (CoplayDev) so the `unity` MCP can drive the Editor |
+| **Optional companion** | Official [Unity CLI](docs/UNITY-CLI.md) (`unity` binary) for install/open/auth — **MCP alone is enough** for the live Editor loop |
 
 ---
 
@@ -39,6 +40,7 @@ For a fuller dependency pass (uv + optional Blender/bridge):
 ./scripts/install-deps.sh --with-blender --assume-yes   # optional Blender
 ./scripts/install-deps.sh --with-devin-bridge           # bridge venv only; does not start without login
 ./scripts/install-deps.sh --with-lia                    # optional LIA Trust ≥ 0.3.0
+./scripts/install-deps.sh --with-unity-cli              # print Unity CLI install (opt-in binary with --assume-yes)
 ```
 
 ### Optional: LIA Trust ≥ 0.3.0
@@ -86,6 +88,7 @@ Details: [docs/DEVIN-BRIDGE.md](docs/DEVIN-BRIDGE.md).
 ```
 
 Assumes Unity is already installed. See [docs/UNITY-INSTALL.md](docs/UNITY-INSTALL.md) for MCP For Unity + UPM.
+Optional official CLI companion: [docs/UNITY-CLI.md](docs/UNITY-CLI.md) (not required; MCP alone is enough for the live Editor agent loop).
 
 ---
 
@@ -170,9 +173,11 @@ python tools/img2threejs/forge/stage1_intake/probe_image.py fixtures/ref.png
 - [DEVIN-BRIDGE.md](docs/DEVIN-BRIDGE.md)
 - [TOOL-CATALOG.md](docs/TOOL-CATALOG.md)
 - [UNITY-INSTALL.md](docs/UNITY-INSTALL.md)
+- [UNITY-CLI.md](docs/UNITY-CLI.md) — optional official CLI companion (MCP remains default live Editor path)
 - [VISION-ROUTING.md](docs/VISION-ROUTING.md)
 - [DEPENDENCIES.md](docs/DEPENDENCIES.md)
-- [Plan: optional Unity CLI](docs/plans/UNITY-CLI-INTEGRATION-PLAN.md) — PLAN ONLY; MCP remains default Editor path
+- [Plan: optional Unity CLI](docs/plans/UNITY-CLI-INTEGRATION-PLAN.md)
+- [Phase 4 spike: CLI MCP vs Coplay](docs/plans/UNITY-CLI-MCP-SPIKE.md) — Coplay remains default
 - [EXCLUDE.md](EXCLUDE.md) — what is intentionally out
 
 ## Tests

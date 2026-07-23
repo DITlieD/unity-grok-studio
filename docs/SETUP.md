@@ -10,6 +10,7 @@ End-to-end procedure for a machine that already has (or will install) Unity, Gro
 | `uv` / `uvx` | MCP wheels (`mcpforunityserver`) | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
 | Grok CLI | plugin host | install Grok Build |
 | Unity Hub + Editor | project assumed | Unity Hub (confirm large download) |
+| Official Unity CLI (optional) | open/install/auth companion | [UNITY-CLI.md](UNITY-CLI.md) — **MCP alone is enough** for live Editor |
 | FreeLLMAPI (optional) | `free-auto` / vision | run your FreeLLMAPI instance on `:3001` |
 | Devin Desktop (optional) | free Devin models | Cognition installer; own account |
 | Blender 5.x (optional) | blender-gen materials/meshes | see OS section below |
@@ -32,11 +33,14 @@ export UNITY_GROK_ROOT="$(pwd)"
 ./scripts/install-deps.sh --with-blender --assume-yes
 ./scripts/install-deps.sh --with-devin-bridge
 ./scripts/install-deps.sh --with-lia          # LIA Trust ≥ 0.3.0 (recommended GATE)
+./scripts/install-deps.sh --with-unity-cli    # print official Unity CLI install; binary only with --assume-yes
 ```
 
 `--with-devin-bridge` only creates `tools/devin-bridge/.venv` and prints login instructions. It does **not** start the proxy without credentials.
 
 `--with-lia` runs the public install one-liner from `DITlieD/lia-trust` main (user network). Prefer **≥ 0.3.0**; v0.2.x is broken for multi-harness/Grok. Details: [LIA-TRUST.md](LIA-TRUST.md).
+
+`--with-unity-cli` prints the official CLI install command by default. With `--assume-yes` it may run the **CLI binary** installer only — never silent multi-GB Editor installs. Full matrix: [UNITY-CLI.md](UNITY-CLI.md).
 
 ## 3. FreeLLMAPI one-liner pointers
 
@@ -119,6 +123,8 @@ Unity is **assumed present**. Focus:
 3. Wire package UPM: `./scripts/wire-unity-project.sh /path/to/Project`
 4. Domain reload → Tools/UnityGrok menus.
 
+**MCP alone is enough** for the live Editor agent loop. Optional official Unity CLI companion (install/open/auth; never required): [UNITY-CLI.md](UNITY-CLI.md).
+
 Details: [UNITY-INSTALL.md](UNITY-INSTALL.md).
 
 ## 9. Doctor matrix
@@ -128,7 +134,7 @@ Details: [UNITY-INSTALL.md](UNITY-INSTALL.md).
 ./scripts/doctor.sh --json
 ```
 
-Expect components including: `python`, `uvx`, `grok_plugin`, `blender`, `unity_editor`, `freellmapi`, `devin_bridge`, `devin_credentials`, `lia` (≥ 0.3.0 → `ok`), MCP wrappers, UPM packages.
+Expect components including: `python`, `uvx`, `grok_plugin`, `blender`, `unity_editor`, `unity_cli` (optional companion; missing does not fail overall doctor), `freellmapi`, `devin_bridge`, `devin_credentials`, `lia` (≥ 0.3.0 → `ok`), MCP wrappers, UPM packages.
 
 Statuses:
 

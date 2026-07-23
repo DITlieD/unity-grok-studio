@@ -4,7 +4,7 @@
 |--------|------|-----|
 | A In git | blender-gen, sfx/ardy CLIs, gates, skills, img2threejs, UPM packages, **devin-bridge source** | clone |
 | B Package managers | uv/uvx, venv Python deps, grok plugin, mcpforunityserver wheel, bridge `requirements.txt` | bootstrap / install-deps |
-| C Host apps | Unity Editor, **Blender 5.x**, FreeLLMAPI, **Devin Desktop**, **LIA Trust ≥ 0.3.0** (recommended optional GATE), optional Meshy/Freesound keys | guided; user approval for sudo |
+| C Host apps | Unity Editor, optional **Unity CLI** companion, **Blender 5.x**, FreeLLMAPI, **Devin Desktop**, **LIA Trust ≥ 0.3.0** (recommended optional GATE), optional Meshy/Freesound keys | guided; user approval for sudo |
 
 Agent auto-install: Bucket B yes. Bucket C only after explicit user confirmation.
 Never invent API keys. Never silent multi-GB Unity downloads.
@@ -51,12 +51,22 @@ Doctor components: `devin_bridge`, `devin_credentials`.
 - MCP For Unity (CoplayDev) required for live Editor MCP.
 - See [UNITY-INSTALL.md](UNITY-INSTALL.md).
 
+### Official Unity CLI (optional companion)
+
+- Standalone `unity` binary for install/open/auth (not the Editor executable).
+- **MCP alone is enough** for the live Editor agent loop; CLI never required for bootstrap.
+- Doctor component: `unity_cli` (`ok` / `warn` / `missing` — never fails overall doctor alone).
+- Install print: `./scripts/install-deps.sh --with-unity-cli`; CLI binary with `--assume-yes` too.
+- Never silent `unity install <editor-version>` (multi-GB).
+- Full guide: [UNITY-CLI.md](UNITY-CLI.md). Integration plan: [plans/UNITY-CLI-INTEGRATION-PLAN.md](plans/UNITY-CLI-INTEGRATION-PLAN.md).
+
 ## Script entry points
 
 | Script | Role |
 |--------|------|
 | `scripts/bootstrap.sh` | venv, core pip, chmod, apply_models mention |
-| `scripts/install-deps.sh` | bootstrap + uv; `--with-blender`; `--with-devin-bridge`; `--with-lia` |
+| `scripts/install-deps.sh` | bootstrap + uv; `--with-blender`; `--with-devin-bridge`; `--with-lia`; `--with-unity-cli` |
 | `scripts/doctor.sh` | component matrix (`--json` supported) |
 | `scripts/apply_models.sh` | merge free model stanzas into Grok config |
+| `scripts/wire-unity-project.sh` | UPM uitools/agentdebug; optional `--with-pipeline` |
 | `tools/devin-bridge/run.sh` | start Messages proxy |
